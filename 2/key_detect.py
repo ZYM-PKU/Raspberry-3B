@@ -1,4 +1,6 @@
 import RPi.GPIO as GPIO
+import time
+
 
 KEY = 20
 GPIO.setmode(GPIO.BCM)
@@ -10,4 +12,10 @@ def my_callback(ch):
     print("KEY PRESS")
 
 
-add_event_detect(KEY, GPIO.RISING, callback=my_callback, bouncetime=200)
+GPIO.add_event_detect(KEY, GPIO.RISING, callback=my_callback, bouncetime=200)
+try:
+    while True:
+        time.sleep(1)
+except KeyboardInterrupt:
+    GPIO.cleanup()
+    

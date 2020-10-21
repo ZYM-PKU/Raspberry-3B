@@ -10,12 +10,11 @@ GPIO.setup(LED,GPIO.OUT)
 def display1():
     state=0
     try:
-        while True():
-            state=1 if state==0 or 0#变换状态
+        while True:
+            state=1 if state==0 else 0#变换状态
             GPIO.output(LED,state)
             time.sleep(0.2)
     except KeyboardInterrupt:
-        p.stop()
         GPIO.cleanup()
 
 def display2():
@@ -23,7 +22,7 @@ def display2():
     p.start(50)
     try:
         while True:
-            pass
+            time.sleep(1)
     except KeyboardInterrupt:
         p.stop()
         GPIO.cleanup()
@@ -50,4 +49,4 @@ def display3():
 
 
 if __name__ == "__main__":
-    display1()
+    display3()

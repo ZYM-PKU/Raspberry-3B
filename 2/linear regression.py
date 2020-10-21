@@ -1,14 +1,14 @@
 import numpy as np
 import RPi.GPIO as GPIO
-
+import time
 
 KEY = 20
 LED = 26
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(KEY, GPIO.IN,GPIO.PUD_UP) # 上拉电阻
 GPIO.setup(LED,GPIO.OUT)
+GPIO.output(LED,0)
 
-print("Press to start...")
 
 m1,m2,m3=1,2,3#目标参数设置
 
@@ -21,8 +21,7 @@ x=np.concatenate((x1,x2),axis=0)#垂直堆叠，向量化输入
 y = x1 * m1 + x2 * m2 + m3 + np.random.randn(1,length) # y 要加上随机噪声
 
 
-
-learning_rate=0.01126#学习率
+learning_rate=0.02#学习率
 iter_times=100#训练次数
 press_times=0#按键次数
 
@@ -32,10 +31,11 @@ b=np.random.rand(1,1)
 
 
 
-def callback():
-    global w,b,x,y,press_times
+def callback(ch):
+    global w,b,x,y,press_times,learning_rate
+    if learning_rate>0.001:learning_rate-=0.001
 
-    press_time+=1
+    press_times+=1
     loss_list=[]
 
     for epoch in range(iter_times):
@@ -55,8 +55,8 @@ def callback():
         w-=learning_rate*dw
         b-=learning_rate*db
     
-    average_loss=sum(loss_list)
-    if average_loss<1:
+    average_loss=sum(loss_list)/len(loss_list)
+    if abs(b[0][0]-m3)<0.1:
         GPIO.output(LED,1)#点亮灯泡
 
     print(f"press_times:  {press_times}")
@@ -65,12 +65,14 @@ def callback():
     print(f"b:  {b}")
 
 
+
+
 if __name__ == "__main__":
-    add_event_detect(KEY, GPIO.RISING, callback=callback, bouncetime=200)
+    print("Press to start...")
+    GPIO.add_event_detect(KEY, GPIO.RISING, callback=callback, bouncetime=200)
     try:
         while True:
-            pass
+            time.sleep(1)
     except KeyboardInterrupt:
-        p.stop()
         GPIO.cleanup()
 
