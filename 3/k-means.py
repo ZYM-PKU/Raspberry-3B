@@ -9,8 +9,8 @@ PATH="/sys/bus/w1/devices/28-0000096582fc/w1_slave"#温度文件路径
 
 
 time1,time2=5,7
-aver_temp1,aver_temp2=22,28
-sigma1,sigma2=0.2,0.4
+aver_temp1,aver_temp2=23,27
+sigma1,sigma2=1,1.5
 
 temp1=np.random.randn(time1*2*30)*sigma1+aver_temp1
 temp2=np.random.randn(time2*2*30)*sigma2+aver_temp2
@@ -22,7 +22,7 @@ plt.hist(temp,50,histtype='bar',facecolor='yellowgreen',alpha=0.75)
 plt.show()
 
 #k-means
-core1,core2=random.randint(20,24),random.randint(26,30)
+core1,core2=random.randint(20,25),random.randint(25,30)
 list1,list2=[],[]
 prev1,prev2=core1,core2
 while True:
