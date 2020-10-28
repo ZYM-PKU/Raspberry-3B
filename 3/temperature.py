@@ -4,7 +4,7 @@ import time,os,glob
 LED = 26
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(LED,GPIO.OUT)
-GPIO.output(LED,0)
+p = GPIO.PWM(LED,10)
 
 PATH="/sys/bus/w1/devices/28-0000096582fc/w1_slave"#温度文件路径
 
@@ -33,9 +33,9 @@ while True:
         #报警
         try:
            if  float(t)>28:
-               GPIO.output(LED,1)#温度报警
+               p.start(100)#温度报警
            else:
-               GPIO.output(LED,0)
+               p.start(0)
         except:pass
 
         time.sleep(1)
