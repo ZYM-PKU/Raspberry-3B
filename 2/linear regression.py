@@ -33,7 +33,8 @@ b=np.random.rand(1,1)
 
 def callback(ch):
     global w,b,x,y,press_times,learning_rate
-    if learning_rate>0.001:learning_rate-=0.001
+    
+    if learning_rate>0.001:learning_rate-=0.001#动态调整学习率
 
     press_times+=1
     loss_list=[]
@@ -55,7 +56,8 @@ def callback(ch):
         w-=learning_rate*dw
         b-=learning_rate*db
     
-    average_loss=sum(loss_list)/len(loss_list)
+    average_loss=sum(loss_list)/len(loss_list)#计算一个epoch内的平均损失
+
     if abs(b[0][0]-m3)<0.1:
         GPIO.output(LED,1)#点亮灯泡
 

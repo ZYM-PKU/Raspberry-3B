@@ -8,6 +8,7 @@ GPIO.setup(LED,GPIO.OUT)
 
 
 def display1():
+    '''利用原始方法控制led闪烁'''
     state=0
     try:
         while True:
@@ -18,6 +19,7 @@ def display1():
         GPIO.cleanup()
 
 def display2():
+    '''利用PWM控制led闪烁'''
     p = GPIO.PWM(LED,2.5)
     p.start(50)
     try:
@@ -30,7 +32,7 @@ def display2():
 
 
 def display3():
-
+    '''利用PWM控制led产生呼吸灯效果'''
     p = GPIO.PWM(LED,50)
     p.start(0)
 
