@@ -43,7 +43,7 @@ def disp2():
     while True:
 
 
-        time=gettime()
+        nowtime=gettime()
 
         logo=Image.open(os.path.join(PATH,'p128.png')).resize((32,32),Image.ANTIALIAS).convert('1')#logo
         img = Image.new('1',(disp.width,disp.height),'black')#final_img
@@ -52,7 +52,7 @@ def disp2():
         font = ImageFont.truetype("comicsansms.ttf",13)
         draw = ImageDraw.Draw(img)
         draw.bitmap((0,0), img, fill=1)
-        draw.text((64,0), time, font=font, fill=255)
+        draw.text((64,0), nowtime, font=font, fill=255)
         draw.text((32,15), "Count down of ", font=font, fill=255)
         draw.text((50,30), "mid-term:", font=font, fill=255)
 
@@ -73,8 +73,9 @@ def disp2():
         disp.clear()
         disp.image(img)
         disp.display()
-        time.sleep(1)
+        time.sleep(0.1)
 
 
 if __name__ == "__main__":
     disp2()
+
