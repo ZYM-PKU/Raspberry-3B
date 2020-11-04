@@ -1,9 +1,11 @@
-import time
+import time,os
 import spidev as SPI
 import SSD1306
 from PIL import Image,ImageDraw,ImageFont # 调用相关库文件
 from datetime import datetime
 
+
+PATH = os.path.dirname(__file__)
 RST = 19
 DC = 16
 bus = 0
@@ -26,11 +28,12 @@ def gettime():
 
 def disp1():
     '''显示helloworld'''
-    font = ImageFont.load_default()
+
+    font = ImageFont.truetype("comicsansms.ttf",20)
     image = Image.new('RGB',(disp.width,disp.height),'black').convert('1')
     draw = ImageDraw.Draw(image)
-    draw.bitmap((0,0), logo, fill=1)
-    draw.text((x,top), 'Hello World!', font=font, fill=255)
+    draw.bitmap((0,0), image, fill=1)
+    draw.text((10,20), 'Hello World!', font=font, fill=255)
     disp.image(image)
     disp.display() # 显示图片
 
@@ -38,24 +41,40 @@ def disp1():
 def disp2():
     '''显示时钟'''
     while True:
-        time.sleep(1)
+
 
         time=gettime()
 
-        logo=Image.open('p128.png').resize((32,32),Image.ANTIALIAS).convert('1')#logo
+        logo=Image.open(os.path.join(PATH,'p128.png')).resize((32,32),Image.ANTIALIAS).convert('1')#logo
         img = Image.new('1',(disp.width,disp.height),'black')#final_img
         img.paste(logo, (0, 0, logo.size[0], logo.size[1]))
 
-        font = ImageFont.load_default()
-        draw = ImageDraw.Draw(image)
-        draw.bitmap((0,0), logo, fill=1)
-        draw.text((x,top), time, font=font, fill=255)
+        font = ImageFont.truetype("comicsansms.ttf",13)
+        draw = ImageDraw.Draw(img)
+        draw.bitmap((0,0), img, fill=1)
+        draw.text((64,0), time, font=font, fill=255)
+        draw.text((32,15), "Count down of ", font=font, fill=255)
+        draw.text((50,30), "mid-term:", font=font, fill=255)
+
+        tardate=datetime(2020,11,9)
+        nowdate=datetime.now()
+        delta=tardate-nowdate
+        days=delta.days
+        seconds=delta.seconds
+        hours=seconds//3600
+        seconds=seconds%3600
+        minutes=seconds//60
+        seconds=seconds%60
+
+        draw.text((0,45), f"{days}d  {hours}hour {minutes}min {seconds}s", font=font, fill=255)
+
 
 
         disp.clear()
         disp.image(img)
         disp.display()
+        time.sleep(1)
 
 
 if __name__ == "__main__":
-    disp1()
+    disp2()
