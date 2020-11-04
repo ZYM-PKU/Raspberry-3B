@@ -37,23 +37,24 @@ def disp1():
 
 def disp2():
     '''显示时钟'''
+    while True:
+        time.sleep(1)
+
+        time=gettime()
+
+        logo=Image.open('p128.png').resize((32,32),Image.ANTIALIAS).convert('1')#logo
+        img = Image.new('1',(disp.width,disp.height),'black')#final_img
+        img.paste(logo, (0, 0, logo.size[0], logo.size[1]))
+
+        font = ImageFont.load_default()
+        draw = ImageDraw.Draw(image)
+        draw.bitmap((0,0), logo, fill=1)
+        draw.text((x,top), time, font=font, fill=255)
 
 
-    time=gettime()
-
-    logo=Image.open('p128.png').resize((32,32),Image.ANTIALIAS).convert('1')#logo
-    img = Image.new('1',(disp.width,disp.height),'black')#final_img
-    img.paste(logo, (0, 0, logo.size[0], logo.size[1]))
-
-    font = ImageFont.load_default()
-    draw = ImageDraw.Draw(image)
-    draw.bitmap((0,0), logo, fill=1)
-    draw.text((x,top), time, font=font, fill=255)
-
-
-    disp.clear()
-    disp.image(img)
-    disp.display()
+        disp.clear()
+        disp.image(img)
+        disp.display()
 
 
 if __name__ == "__main__":
