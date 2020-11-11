@@ -28,6 +28,7 @@ ds3231SetTime() # 设置时间
 while True:
     t=ds3231ReadTime()
     print(t) # 读出时间
-    print(f"Time: {t[6]}year {t[5]}month {t[4]}day  {t[2]}h {t[1]}m {t[0]}s")
+    print(f"Time: 20{t[6]}year {t[5]}month {t[4]}day  {t[2]}h {t[1]}m {t[0]}s")
+    print("-------------------------------------------------")
     time.sleep(1)
 
