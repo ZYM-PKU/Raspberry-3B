@@ -10,7 +10,7 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 input_size = 64
 hidden_size = 50
 num_classes = 10
-num_epochs = 10
+num_epochs =50
 batch_size = 40
 learning_rate = 0.001
 
@@ -20,6 +20,7 @@ digits = datasets.load_digits()
 images_and_labels = list(zip(torch.from_numpy(digits.images/16).float(), torch.from_numpy(digits.target).long()))
 
 n_samples = len(digits.images)
+
 
 # 定义网络结构，Fully connected neural network with one hidden layer
 class NeuralNet(nn.Module):
@@ -37,7 +38,7 @@ class NeuralNet(nn.Module):
         return out
 
 
-model = NeuralNet(input_size, hidden_size, num_classes)
+model = NeuralNet(input_size, hidden_size, num_classes).to(device)
 
 # Loss and optimizer
 # 定义损失函数，使用的是交叉熵函数
@@ -52,10 +53,10 @@ def train_model(model, train_loader):
         for i, (images, labels) in enumerate(train_loader):
             # Move tensors to the configured device
             images = images.reshape(-1, 8 * 8).to(device)
-            labels = labels.reshape(1).to(device)
+            labels = labels.to(device)
 
             # Forward pass，前向传播计算网络结构的输出结果
-            outputs = model(images)
+            outputs = model(images).to(device)
             # 计算损失函数
             loss = criterion(outputs, labels)
 
@@ -68,7 +69,7 @@ def train_model(model, train_loader):
             optimizer.step()
 
             # 打印训练信息
-            if (i + 1) % 100 == 0:
+            if (i + 1) % 10 == 0:
                 print('Epoch [{}/{}], Step [{}/{}], loss: {:.4f}'.format
                       (epoch + 1, num_epochs, i + 1, total_step, loss.item()))
     # 保存训练好的模型
@@ -90,8 +91,8 @@ def test_model(model, test_loader, device):
         print('Accuracy is: {}%'.format(100 * correct / total))
 
 
-dataloader = iter(data.DataLoader( images_and_labels[:n_samples // 2], batch_size=batch_size, \
-        shuffle=True,pin_memory=True))
+dataloader = data.DataLoader( images_and_labels[:n_samples // 2], batch_size=batch_size, \
+        shuffle=True,pin_memory=True)
 train_model(model, dataloader)
 test_model(model, images_and_labels[n_samples // 2:], device)
 
