@@ -166,14 +166,17 @@ class Decoder(nn.Module):
 
 ##############定义前传网络#############
 class FPnet(nn.Module):
-    def __init__(self,encoder,decoder,sfeature):
+    '''风格化前馈网络'''
+    def __init__(self,encoder,decoder):
         super(FPnet, self).__init__()
+        self.encoder = encoder
         self.decoder = decoder
         self.mseloss = nn.MSELoss()
-        self.encoder=encoder
         self.feature_vectors={'content':[],'style':[],'result':[]}#储存不同层的特征向量
-        self.feature_vectors['style']=sfeature
 
+
+    def set_style_feature(self,sfeature):
+        self.feature_vectors['style']=sfeature
 
     def encode(self, x,type):#基于vgg19编码提取特定层的特征图
         '''分别提取relu1-1,relu2-1,relu3-1,relu4-1的特征，存入容器中备用'''
@@ -203,6 +206,7 @@ class FPnet(nn.Module):
 
         #self.encode(style,'style')
         self.encode(content,'content')
+        
         content_features=self.feature_vectors['content']
         style_features=self.feature_vectors['style']
 

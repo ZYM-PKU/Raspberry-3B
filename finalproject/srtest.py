@@ -9,7 +9,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data as data
 import torchvision.transforms as transforms
-from srnet import SRCNN,SRNET
+from srnet import SRCNN
 from PIL import Image, ImageFile
 from function import RecurrentSampler
 from alive_progress import alive_bar
@@ -29,13 +29,21 @@ def Transform():
     ]
     return transforms.Compose(transform_list)
 
-srnet=SRNET()
-srnet.load_state_dict(torch.load(os.path.join(PATH,"model_epoch_150.pth")))
 
-transform=Transform()
-img = Image.open(os.path.join(PATH,"result.jpg")).convert('RGB')
-img=transform(img).unsqueeze(0)
-img=srnet(img)
+tt=transforms.ToTensor()
+up2=nn.Upsample(scale_factor=2, mode='bilinear')
+down2=nn.MaxPool2d(2)
+srcnn=SRCNN(test=True).eval().cuda()
+srcnn.load_state_dict(torch.load(os.path.join(PATH,"model/srnet_x2.pth")))
 
-save_image(img.cpu(),os.path.join(PATH,"recovered.jpg")) 
+
+
+
+if __name__ == "__main__":
+    image = Image.open(os.path.join(PATH,'1.jpg')).convert('RGB')
+    image = tt(image).unsqueeze(0).cuda()
+    image=up2(image)
+    save_image(image.cpu(),os.path.join(PATH,"up2.jpg")) 
+    image = srcnn(image)
+    save_image(image.cpu(),os.path.join(PATH,"recovered.jpg")) 
 
