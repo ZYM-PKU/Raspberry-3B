@@ -254,6 +254,8 @@ def change_style():
         value = bus.read_byte(address) | 0xF0
         if ((value | 0xFD) != 0xFF):
             curr_style=(curr_style+1)%9
+        elif (value | 0xFB) != 0xFF:
+			curr_style=(curr_style+9-1)%9
         time.sleep(0.1)
 
 
